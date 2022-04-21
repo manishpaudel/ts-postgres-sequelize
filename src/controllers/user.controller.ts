@@ -1,20 +1,34 @@
-import { Request, Response, NextFunction } from "express";
-import { createUser } from "../services/user.service";
-import { omit } from "lodash";
-import logger from "../utils/logger";
-import { validationResult } from "express-validator";
+import db from "../models";
+import { Request, Response } from "express";
+import { v4 as uuidv4 } from "uuid";
 
-export const createUserHandler = async (req: Request, res: Response) => {
+export const createUserController = async (req: Request, res: Response) => {
   try {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(422).send(errors);
-    }
-
-    const user = await createUser(req.body);
-    return res.status(200).send(omit(user.toJSON(), "password"));
+    const { name, email, password } = req.body;
+    const user = await db.User.create({
+      id: uuidv4(),
+      name,
+      email,
+      password,
+    });
+    return res.status(200).send(user);
   } catch (error: any) {
-    logger.error(error);
-    res.status(409).send(error.message);
+    console.log(error);
+    return res.status(500).send(`Error on creating user: ${error.message}`);
+  }
+};
+
+export const getUsersController = async (req: Request, res: Response) => {
+  try {
+    const users = await db.User.findAll({
+      //get with associations
+      include: {
+        model: "db.Project",
+      },
+    });
+    return res.status(200).send(users);
+  } catch (error: any) {
+    console.log(error);
+    return res.status(500).send(`Error on creating user: ${error.message}`);
   }
 };
