@@ -1,7 +1,7 @@
 "use strict";
 import { Model } from "sequelize";
 
-interface ProjectAssignmentAttributes {
+export interface ProjectAssignmentAttributes {
   ProjectId: number;
   UserId: string;
 }
@@ -29,7 +29,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: false,
         primaryKey: true,
         references: {
-          model: "Project",
+          model: "Projects",
           key: "id",
         },
       },
@@ -38,7 +38,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
         primaryKey: true,
         allowNull: false,
         references: {
-          model: "User",
+          model: "Users",
           key: "id",
         },
       },

@@ -1,7 +1,7 @@
 "use strict";
 import { Model } from "sequelize";
 
-interface ProjectAttributes {
+export interface ProjectAttributes {
   id: number;
   title: string;
   status: string;

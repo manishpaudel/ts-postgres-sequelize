@@ -17,7 +17,15 @@ export const createProjectController = async (req: Request, res: Response) => {
 
 export const getProjectsController = async (req: Request, res: Response) => {
   try {
-    const projects = await db.Project.findAll({});
+    const projects = await db.Project.findAll({
+      include: {
+        model: db.User,
+        attributes: ["id", "name"],
+        through: {
+          attributes: [],
+        },
+      },
+    });
     return res.status(200).send(projects);
   } catch (error: any) {
     console.log(error);
